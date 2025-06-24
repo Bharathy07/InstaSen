@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Post - InstaSen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 32px 28px 24px 28px;
+        }
+        h2 {
+            text-align: center;
+            color: #a18cd1;
+            margin-bottom: 24px;
+            font-size: 2rem;
+            letter-spacing: 1px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="file"] {
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        textarea {
+            padding: 10px 12px;
+            margin-bottom: 16px;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #f8fafc;
+            transition: border 0.2s;
+            resize: none;
+            min-height: 60px;
+        }
+        textarea:focus {
+            border: 1.5px solid #a18cd1;
+            outline: none;
+        }
+        button {
+            padding: 10px 0;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #a18cd1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .flash {
+            color: #f44336;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>New Post</h2>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash">{{ messages[0] }}</div>
+          {% endif %}
+        {% endwith %}
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required>
+            <textarea name="caption" placeholder="Write a caption..."></textarea>
+            <button type="submit">Post</button>
+        </form>
+        <a class="back-link" href="{{ url_for('main.feed') }}">&larr; Back to Feed</a>
+    </div>
+</body>
+</html> 

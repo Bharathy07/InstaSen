@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages - InstaSentiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 98vw;
+            min-width: 320px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 32px 12px 24px 12px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100vw;
+                min-width: 0;
+                margin: 0;
+                border-radius: 0;
+                padding: 16px 2vw 16px 2vw;
+            }
+        }
+        h2 {
+            text-align: center;
+            color: #a18cd1;
+            margin-bottom: 24px;
+            font-size: 2rem;
+            letter-spacing: 1px;
+        }
+        .user-list {
+            margin-top: 10px;
+        }
+        .user-item {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 10px 14px;
+            box-shadow: 0 1px 4px 0 rgba(161, 140, 209, 0.06);
+        }
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 10px;
+        }
+        .username {
+            font-weight: bold;
+            color: #a18cd1;
+            font-size: 1.05rem;
+        }
+        .chat-link {
+            margin-left: auto;
+            color: #fff;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            border-radius: 8px;
+            padding: 6px 14px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .chat-link:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+        }
+        .no-users {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Messages</h2>
+        <div class="user-list">
+            {% for user in users %}
+                <div class="user-item">
+                    <span class="avatar">{{ user.username[0]|upper }}</span>
+                    <span class="username">{{ user.username }}</span>
+                    <span class="last-message" style="display:block;color:#888;font-size:13px;margin-left:10px;max-width:50vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                        {% set last_msg = (user.sent_messages.filter_by(recipient_id=current_user.id).order_by(Message.timestamp.desc()).first() or user.received_messages.filter_by(sender_id=current_user.id).order_by(Message.timestamp.desc()).first()) %}
+                        {% if last_msg %}{{ last_msg.content }}{% else %}No messages yet.{% endif %}
+                    </span>
+                    <a class="chat-link" href="{{ url_for('main.conversation', username=user.username) }}">Chat</a>
+                </div>
+            {% else %}
+                <div class="no-users">No conversations yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html> 

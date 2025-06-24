@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Detail - InstaSentiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 540px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+        .header {
+            padding: 28px 20px 18px 20px;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            text-align: center;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px 0 20px;
+        }
+        .nav a, .nav form button {
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 8px 18px;
+            text-decoration: none;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .nav a:hover, .nav form button:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+            transform: scale(1.04);
+        }
+        .post {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px 0 rgba(161, 140, 209, 0.10);
+            margin: 24px 20px 28px 20px;
+            padding: 0 0 12px 0;
+            display: flex;
+            flex-direction: column;
+            border: 1.5px solid #f3e8ff;
+        }
+        .post-image {
+            width: 100%;
+            max-height: 340px;
+            object-fit: cover;
+            border-radius: 14px 14px 0 0;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 18px 0 18px;
+        }
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 10px;
+            box-shadow: 0 2px 8px 0 rgba(161, 140, 209, 0.10);
+        }
+        .username {
+            font-weight: bold;
+            color: #a18cd1;
+            font-size: 1.05rem;
+            margin-right: 8px;
+        }
+        .timestamp {
+            color: #b0b0b0;
+            font-size: 12px;
+            margin-left: auto;
+        }
+        .caption {
+            font-size: 16px;
+            margin: 10px 18px 0 18px;
+            color: #333;
+            word-break: break-word;
+        }
+        .post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 18px 0 18px;
+        }
+        .sentiment-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sentiment {
+            font-size: 15px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 14px;
+            box-shadow: 0 1px 4px 0 rgba(161, 140, 209, 0.08);
+        }
+        .sentiment.Positive {
+            color: #fff;
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .sentiment.Negative {
+            color: #fff;
+            background: linear-gradient(90deg, #f85032 0%, #e73827 100%);
+        }
+        .sentiment.Neutral {
+            color: #333;
+            background: linear-gradient(90deg, #ffe082 0%, #fffde4 100%);
+        }
+        .score {
+            font-size: 13px;
+            color: #888;
+            margin-left: 6px;
+        }
+        .emoji {
+            font-size: 22px;
+            margin-left: 6px;
+        }
+        .like-count, .comment-count {
+            color: #888;
+            font-size: 15px;
+            margin-left: 10px;
+        }
+        .comments-section {
+            margin: 0 20px 0 20px;
+        }
+        .comments-title {
+            font-weight: bold;
+            color: #a18cd1;
+            margin: 18px 0 10px 0;
+            font-size: 1.1rem;
+        }
+        .comment {
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            box-shadow: 0 1px 4px 0 rgba(161, 140, 209, 0.06);
+        }
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .comment-username {
+            font-weight: bold;
+            color: #a18cd1;
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+        .comment-timestamp {
+            color: #b0b0b0;
+            font-size: 12px;
+            margin-left: auto;
+        }
+        .comment-content {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .comment-sentiment {
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 2px 10px;
+            margin-left: 6px;
+        }
+        .comment-sentiment.Positive {
+            color: #fff;
+            background: #43e97b;
+        }
+        .comment-sentiment.Negative {
+            color: #fff;
+            background: #f85032;
+        }
+        .comment-sentiment.Neutral {
+            color: #333;
+            background: #ffe082;
+        }
+        .add-comment-form {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+        .add-comment-form textarea {
+            padding: 10px 12px;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #fff;
+            transition: border 0.2s;
+            resize: none;
+            min-height: 50px;
+            margin-bottom: 10px;
+        }
+        .add-comment-form textarea:focus {
+            border: 1.5px solid #a18cd1;
+            outline: none;
+        }
+        .add-comment-form button {
+            padding: 8px 0;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .add-comment-form button:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 100%; margin: 0; border-radius: 0; }
+            .header, .nav, .post, .comments-section { padding: 10px; }
+            .post { padding: 0 0 8px 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>InstaSen</h2>
+        </div>
+        <div class="nav">
+            <a href="{{ url_for('main.feed') }}">Feed</a>
+            <a href="{{ url_for('main.profile', username=current_user.username) }}">Profile</a>
+            <form method="post" action="{{ url_for('auth.logout') }}" style="display:inline;">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+        <div class="post">
+            <img class="post-image" src="{{ url_for('static', filename='images/' ~ post.image_filename) }}" alt="Post image">
+            <div class="post-header">
+                <span class="avatar">{{ post.author.username[0]|upper }}</span>
+                <span class="username">{{ post.author.username }}</span>
+                <span class="timestamp">{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+            </div>
+            {% if post.caption %}
+            <div class="caption">{{ post.caption }}</div>
+            {% endif %}
+            <div class="post-footer">
+                <div class="sentiment-box">
+                    <span class="emoji">
+                        {% if post.sentiment == 'Positive' %}😊{% elif post.sentiment == 'Negative' %}😞{% else %}😐{% endif %}
+                    </span>
+                    <span class="sentiment {{ post.sentiment }}">{{ post.sentiment }}</span>
+                    <span class="score">({{ post.sentiment_score }})</span>
+                </div>
+                <div>
+                    <span class="like-count">♥ {{ post.likes|length }}</span>
+                    <span class="comment-count">💬 {{ post.comments|length }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="comments-section">
+            <div class="comments-title">Comments</div>
+            {% for comment in post.comments %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-username">{{ comment.author.username }}</span>
+                        <span class="comment-timestamp">{{ comment.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                        {% if comment.user_id == current_user.id %}
+                        <form method="post" action="{{ url_for('main.delete_comment', comment_id=comment.id, post_id=post.id) }}" style="display:inline; margin-left:10px;">
+                            <button type="submit" style="background:none; border:none; color:#f44336; font-size:15px; cursor:pointer;">Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <div class="comment-content">{{ comment.content }}</div>
+                    <span class="comment-sentiment {{ comment.sentiment }}">{{ comment.sentiment }} ({{ comment.sentiment_score }})</span>
+                </div>
+            {% else %}
+                <p style="text-align:center; color:#888;">No comments yet.</p>
+            {% endfor %}
+            <form class="add-comment-form" method="post">
+                <textarea name="content" placeholder="Add a comment..." required></textarea>
+                <button type="submit">Comment</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 

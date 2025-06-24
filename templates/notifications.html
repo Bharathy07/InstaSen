@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications - InstaSentiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 540px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+        .header {
+            padding: 28px 20px 18px 20px;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            text-align: center;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px 0 20px;
+        }
+        .nav a, .nav form button {
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 8px 18px;
+            text-decoration: none;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .nav a:hover, .nav form button:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+            transform: scale(1.04);
+        }
+        .notifs-list {
+            padding: 20px;
+        }
+        .notif {
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            padding: 14px 18px;
+            box-shadow: 0 1px 4px 0 rgba(161, 140, 209, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 5px solid #a18cd1;
+        }
+        .notif.unread {
+            border-left: 5px solid #f44336;
+            background: #fff3f3;
+        }
+        .notif-message {
+            font-size: 15px;
+            color: #333;
+        }
+        .notif-time {
+            color: #b0b0b0;
+            font-size: 12px;
+            margin-left: 16px;
+            white-space: nowrap;
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 100%; margin: 0; border-radius: 0; }
+            .header, .nav, .notifs-list { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>InstaSen</h2>
+        </div>
+        <div class="nav">
+            <a href="{{ url_for('main.feed') }}">Feed</a>
+            <a href="{{ url_for('main.profile', username=current_user.username) }}">Profile</a>
+            <form method="post" action="{{ url_for('auth.logout') }}" style="display:inline;">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+        <div class="notifs-list">
+            {% for notif in notifications %}
+                <div class="notif {% if not notif.is_read %}unread{% endif %}">
+                    <span class="notif-message">{{ notif.message }}</span>
+                    <span class="notif-time">{{ notif.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+            {% else %}
+                <p style="text-align:center; color:#888;">No notifications yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Instagram Sentiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #fff;
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+        }
+        .header {
+            padding: 28px 20px 18px 20px;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            text-align: center;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .post-form {
+            padding: 22px 20px 18px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #f8fafc;
+        }
+        .post-form input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px 12px;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        .post-form input[type="text"]:focus,
+        .post-form textarea:focus {
+            border: 1.5px solid #a18cd1;
+            outline: none;
+        }
+        .post-form textarea {
+            width: 100%;
+            height: 70px;
+            resize: none;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 16px;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        .post-form button {
+            margin-top: 10px;
+            padding: 10px 28px;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px 0 rgba(161, 140, 209, 0.10);
+            transition: background 0.2s, transform 0.1s;
+        }
+        .post-form button:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .feed {
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .post {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px 0 rgba(161, 140, 209, 0.10);
+            margin-bottom: 24px;
+            padding: 18px 18px 12px 18px;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s, transform 0.1s;
+            border: 1.5px solid #f3e8ff;
+        }
+        .post:hover {
+            box-shadow: 0 8px 32px 0 rgba(161, 140, 209, 0.18);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 10px;
+            box-shadow: 0 2px 8px 0 rgba(161, 140, 209, 0.10);
+        }
+        .username {
+            font-weight: bold;
+            color: #a18cd1;
+            font-size: 1.05rem;
+            margin-right: 8px;
+        }
+        .timestamp {
+            color: #b0b0b0;
+            font-size: 12px;
+            margin-left: auto;
+        }
+        .content {
+            font-size: 17px;
+            margin-bottom: 12px;
+            color: #333;
+            word-break: break-word;
+        }
+        .post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sentiment-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sentiment {
+            font-size: 15px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 14px;
+            box-shadow: 0 1px 4px 0 rgba(161, 140, 209, 0.08);
+        }
+        .sentiment.Positive {
+            color: #fff;
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .sentiment.Negative {
+            color: #fff;
+            background: linear-gradient(90deg, #f85032 0%, #e73827 100%);
+        }
+        .sentiment.Neutral {
+            color: #333;
+            background: linear-gradient(90deg, #ffe082 0%, #fffde4 100%);
+        }
+        .score {
+            font-size: 13px;
+            color: #888;
+            margin-left: 6px;
+        }
+        .emoji {
+            font-size: 22px;
+            margin-left: 6px;
+        }
+        .delete-btn {
+            background: linear-gradient(90deg, #f85032 0%, #e73827 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 1px 4px 0 rgba(248, 80, 50, 0.10);
+            transition: background 0.2s, transform 0.1s;
+        }
+        .delete-btn:hover {
+            background: linear-gradient(90deg, #e73827 0%, #f85032 100%);
+            transform: scale(1.05);
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 100%; margin: 0; border-radius: 0; }
+            .feed, .post-form, .header { padding: 10px; }
+            .post { padding: 12px 8px 8px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Mini Instagram Sentiment</h2>
+        </div>
+        <form class="post-form" method="post">
+            <input type="text" name="username" placeholder="Your name (optional)">
+            <textarea name="content" placeholder="Write a post..." required></textarea>
+            <br>
+            <button type="submit">Post</button>
+        </form>
+        <div class="feed">
+            {% for post in posts %}
+                <div class="post">
+                    <div class="post-header">
+                        <span class="avatar">{{ post.username[0]|upper if post.username else 'A' }}</span>
+                        <span class="username">{{ post.username }}</span>
+                        <span class="timestamp">{{ post.timestamp }}</span>
+                    </div>
+                    <div class="content">{{ post.content }}</div>
+                    <div class="post-footer">
+                        <div class="sentiment-box">
+                            <span class="emoji">{{ post.emoji }}</span>
+                            <span class="sentiment {{ post.sentiment }}">{{ post.sentiment }}</span>
+                            <span class="score">({{ post.score }})</span>
+                        </div>
+                        <form method="post" action="/delete/{{ post.id }}" style="margin:0;">
+                            <button class="delete-btn" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <p style="text-align:center; color:#888;">No posts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html> 

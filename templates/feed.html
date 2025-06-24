@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feed - InstaSentiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 100vw;
+            max-width: 500px;
+            min-width: 0;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+            padding: 36px 20px 28px 20px;
+        }
+        .header {
+            padding: 32px 20px 22px 20px;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            text-align: center;
+            border-radius: 18px 18px 0 0;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 2.2rem;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 18px;
+            padding: 14px 0 14px 0;
+        }
+        .nav a, .nav form button {
+            display: inline-block;
+            min-width: 110px;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+        .nav a, .nav form button {
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .nav a:hover, .nav form button:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+            transform: scale(1.04);
+        }
+        .feed {
+            padding: 24px 0 0 0;
+        }
+        .post {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px 0 rgba(161, 140, 209, 0.10);
+            margin-bottom: 28px;
+            padding: 0 0 18px 0;
+            display: flex;
+            flex-direction: column;
+            border: 1.5px solid #f3e8ff;
+        }
+        .post-image {
+            width: 100%;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+            background: #e0e7ff;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 22px 0 22px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 12px;
+            box-shadow: 0 2px 8px 0 rgba(161, 140, 209, 0.10);
+        }
+        .username {
+            font-weight: bold;
+            color: #a18cd1;
+            font-size: 1.1rem;
+            margin-right: 10px;
+        }
+        .timestamp {
+            color: #b0b0b0;
+            font-size: 13px;
+            margin-left: auto;
+        }
+        .caption {
+            font-size: 17px;
+            margin: 14px 22px 0 22px;
+            color: #333;
+            word-break: break-word;
+        }
+        .post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 14px 22px 0 22px;
+        }
+        .sentiment-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sentiment {
+            font-size: 15px;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 14px;
+            box-shadow: 0 1px 4px 0 rgba(161, 140, 209, 0.08);
+        }
+        .sentiment.Positive {
+            color: #fff;
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .sentiment.Negative {
+            color: #fff;
+            background: linear-gradient(90deg, #f85032 0%, #e73827 100%);
+        }
+        .sentiment.Neutral {
+            color: #333;
+            background: linear-gradient(90deg, #ffe082 0%, #fffde4 100%);
+        }
+        .score {
+            font-size: 14px;
+            color: #888;
+            margin-left: 8px;
+        }
+        .emoji {
+            font-size: 22px;
+            margin-left: 8px;
+        }
+        .like-btn {
+            background: none;
+            border: none;
+            color: #e73827;
+            font-size: 22px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: transform 0.1s;
+        }
+        .like-btn.liked {
+            color: #f85032;
+            font-weight: bold;
+            transform: scale(1.2);
+        }
+        .comment-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 12px;
+        }
+        .comment-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 100vw; min-width: 0; margin: 0; border-radius: 0; padding: 18px 2vw 18px 2vw; }
+            .feed, .header, .nav { padding: 10px; }
+            .post { padding: 0 0 10px 0; }
+            .nav { gap: 10px; flex-wrap: wrap; padding-bottom: 10px; }
+            .nav a, .nav form button { min-width: 90px; font-size: 15px; padding: 10px 8px; }
+            .header h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>InstaSen</h2>
+        </div>
+        <div class="nav">
+            <a href="{{ url_for('main.create_post') }}">+ New Post</a>
+            <a href="{{ url_for('main.profile', username=current_user.username) }}">Profile</a>
+            <a href="{{ url_for('main.search') }}">Search</a>
+            <a href="{{ url_for('main.messages_inbox') }}">Messages</a>
+            <a href="{{ url_for('main.notifications') }}" style="position:relative;">
+                Notifications
+                {% set unread = current_user.notifications|selectattr('is_read', 'equalto', False)|list|length %}
+                {% if unread > 0 %}
+                <span style="background:#f44336;color:#fff;border-radius:50%;padding:2px 7px;font-size:12px;position:absolute;top:-8px;right:-18px;">{{ unread }}</span>
+                {% endif %}
+            </a>
+            <form method="post" action="{{ url_for('auth.logout') }}" style="display:inline;">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+        <div class="feed">
+            {% for post in posts %}
+                <div class="post">
+                    <img class="post-image" src="{{ url_for('static', filename='images/' ~ post.image_filename) }}" alt="Post image">
+                    <div class="post-header">
+                        <span class="avatar">{{ post.author.username[0]|upper }}</span>
+                        <span class="username">{{ post.author.username }}</span>
+                        <span class="timestamp">{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                    {% if post.caption %}
+                    <div class="caption">{{ post.caption }}</div>
+                    {% endif %}
+                    <div class="post-footer">
+                        <div class="sentiment-box">
+                            <span class="emoji">
+                                {% if post.sentiment == 'Positive' %}😊{% elif post.sentiment == 'Negative' %}😞{% else %}😐{% endif %}
+                            </span>
+                            <span class="sentiment {{ post.sentiment }}">{{ post.sentiment }}</span>
+                            <span class="score">({{ post.sentiment_score }})</span>
+                        </div>
+                        <div>
+                            <form method="post" action="{{ url_for('main.like_post', post_id=post.id) }}" style="display:inline;">
+                                {%- set liked = false -%}
+                                {%- for like in post.likes -%}
+                                    {%- if like.user_id == current_user.id -%}
+                                        {%- set liked = true -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                                <button class="like-btn {% if liked %}liked{% endif %}" type="submit">♥</button>
+                                <span>{{ post.likes|length }}</span>
+                            </form>
+                            <a class="comment-link" href="{{ url_for('main.post_detail', post_id=post.id) }}">💬 {{ post.comments|length }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p style="text-align:center; color:#888;">No posts yet. Be the first to post!</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html> 

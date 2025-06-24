@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }} - Profile - InstaSentiment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 540px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+        .header {
+            padding: 28px 20px 18px 20px;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            text-align: center;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: #fff;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px 0 20px;
+        }
+        .nav a, .nav form button {
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 8px 18px;
+            text-decoration: none;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .nav a:hover, .nav form button:hover {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+            transform: scale(1.04);
+        }
+        .profile-info {
+            text-align: center;
+            margin: 18px 0 24px 0;
+        }
+        .avatar-large {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 2rem;
+            margin: 0 auto 10px auto;
+            box-shadow: 0 2px 8px 0 rgba(161, 140, 209, 0.10);
+        }
+        .username {
+            font-weight: bold;
+            color: #a18cd1;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+        .stats {
+            color: #888;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .posts-list {
+            padding: 0 20px;
+        }
+        .post {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px 0 rgba(161, 140, 209, 0.10);
+            margin-bottom: 28px;
+            padding: 0 0 12px 0;
+            display: flex;
+            flex-direction: column;
+            border: 1.5px solid #f3e8ff;
+        }
+        .post-image {
+            width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 14px 14px 0 0;
+        }
+        .caption {
+            font-size: 16px;
+            margin: 10px 18px 0 18px;
+            color: #333;
+            word-break: break-word;
+        }
+        .post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 18px 0 18px;
+        }
+        .sentiment-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sentiment {
+            font-size: 15px;
+            font-weight: bold;
+            padding: 5px 14px;
+            border-radius: 14px;
+            box-shadow: 0 1px 4px 0 rgba(161, 140, 209, 0.08);
+        }
+        .sentiment.Positive {
+            color: #fff;
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .sentiment.Negative {
+            color: #fff;
+            background: linear-gradient(90deg, #f85032 0%, #e73827 100%);
+        }
+        .sentiment.Neutral {
+            color: #333;
+            background: linear-gradient(90deg, #ffe082 0%, #fffde4 100%);
+        }
+        .score {
+            font-size: 13px;
+            color: #888;
+            margin-left: 6px;
+        }
+        .emoji {
+            font-size: 22px;
+            margin-left: 6px;
+        }
+        .like-count, .comment-count {
+            color: #888;
+            font-size: 15px;
+            margin-left: 10px;
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 100%; margin: 0; border-radius: 0; }
+            .header, .nav, .posts-list { padding: 10px; }
+            .post { padding: 0 0 8px 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>InstaSen</h2>
+        </div>
+        <div class="nav">
+            <a href="{{ url_for('main.feed') }}">Feed</a>
+            <a href="{{ url_for('main.search') }}">Search</a>
+            <a href="{{ url_for('main.messages_inbox') }}">Messages</a>
+            <form method="post" action="{{ url_for('auth.logout') }}" style="display:inline;">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+        <div class="profile-info">
+            {% if user.id == current_user.id %}
+                <form id="profile-image-form" method="post" action="{{ url_for('main.upload_profile_image') }}" enctype="multipart/form-data" style="margin-bottom:10px;">
+                    <label for="profile-image-input" style="cursor:pointer;">
+                        {% if user.profile_image %}
+                            <img src="{{ url_for('static', filename='images/' ~ user.profile_image) }}" alt="Profile Image" class="avatar-large" style="object-fit:cover;"/>
+                        {% else %}
+                            <div class="avatar-large">{{ user.username[0]|upper }}</div>
+                        {% endif %}
+                    </label>
+                    <input id="profile-image-input" type="file" name="profile_image" accept="image/*" style="display:none;" onchange="document.getElementById('profile-image-form').submit();">
+                </form>
+            {% else %}
+                {% if user.profile_image %}
+                    <img src="{{ url_for('static', filename='images/' ~ user.profile_image) }}" alt="Profile Image" class="avatar-large" style="object-fit:cover;"/>
+                {% else %}
+                    <div class="avatar-large">{{ user.username[0]|upper }}</div>
+                {% endif %}
+            {% endif %}
+            <div class="username">{{ user.username }}</div>
+            <div class="stats">
+                Posts: {{ posts|length }}<br>
+                Followers: {{ follower_count }}<br>
+                Following: {{ following_count }}
+            </div>
+            {% if user.id == current_user.id %}
+                <form method="post" action="{{ url_for('main.delete_profile') }}" style="margin-top:10px;">
+                    <button type="submit" style="background:#f44336;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;padding:8px 18px;cursor:pointer;" onclick="return confirm('Are you sure you want to delete your profile? This cannot be undone.');">
+                        Delete Profile
+                    </button>
+                </form>
+            {% elif user.id != current_user.id %}
+                <form method="post" action="{{ url_for('main.follow' if not is_following else 'main.unfollow', username=user.username) }}" style="margin-top:10px;display:inline-block;">
+                    <button type="submit" style="background:linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;padding:8px 18px;cursor:pointer;">
+                        {{ 'Unfollow' if is_following else 'Follow' }}
+                    </button>
+                </form>
+                <a href="{{ url_for('main.conversation', username=user.username) }}" style="background:linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;padding:8px 18px;cursor:pointer;margin-left:10px;display:inline-block;text-decoration:none;">Send Message</a>
+            {% endif %}
+        </div>
+        <div class="posts-list">
+            {% for post in posts %}
+                <div class="post">
+                    <img class="post-image" src="{{ url_for('static', filename='images/' ~ post.image_filename) }}" alt="Post image">
+                    {% if post.caption %}
+                    <div class="caption">{{ post.caption }}</div>
+                    {% endif %}
+                    <div class="post-footer">
+                        <div class="sentiment-box">
+                            <span class="emoji">
+                                {% if post.sentiment == 'Positive' %}😊{% elif post.sentiment == 'Negative' %}😞{% else %}😐{% endif %}
+                            </span>
+                            <span class="sentiment {{ post.sentiment }}">{{ post.sentiment }}</span>
+                            <span class="score">({{ post.sentiment_score }})</span>
+                        </div>
+                        <div>
+                            <span class="like-count">♥ {{ post.likes|length }}</span>
+                            <span class="comment-count">💬 {{ post.comments|length }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p style="text-align:center; color:#888;">No posts yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html> 
